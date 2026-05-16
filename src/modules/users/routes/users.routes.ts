@@ -9,5 +9,5 @@ const createUserController = new CreateUserController();
 export const usersRoutes = Router();
 
 usersRoutes.post('/', validateSchema(createUserSchema), (request, response) =>
-  createUserController.handle(request, response)
+  createUserController.createUser(request, response)
 );

@@ -1,12 +1,15 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import { CreateUserService } from '../services/CreateUserService';
-import { UsersRepository } from '../repositories/UsersRepository';
-import { HttpStatusCode } from '../../../shared/http/HttpStatusCode';
-import { successResponse } from '../../../shared/http/responses';
+import { CreateUserService } from "../services/CreateUserService";
+import { UsersRepository } from "../repositories/UsersRepository";
+import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
+import { successResponse } from "../../../shared/http/responses";
 
 export class CreateUserController {
-  public async handle(request: Request, response: Response): Promise<Response> {
+  public async createUser(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
     const usersRepository = new UsersRepository();
     const createUserService = new CreateUserService(usersRepository);
 
@@ -15,13 +18,13 @@ export class CreateUserController {
     return successResponse({
       response,
       statusCode: HttpStatusCode.CREATED,
-      message: 'User created successfully.',
+      message: "Usuário criado com sucesso.",
       data: {
         id: user.id,
         name: user.name,
         email: user.email,
-        createdAt: user.createdAt
-      }
+        createdAt: user.createdAt,
+      },
     });
   }
 }

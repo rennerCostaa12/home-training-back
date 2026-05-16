@@ -14,7 +14,7 @@ export class CreateUserService {
 
     if (userAlreadyExists) {
       throw new AppError(
-        "User already exists with this email.",
+        "Já existe um usuário com este email.",
         HttpStatusCode.CONFLICT,
       );
     }
