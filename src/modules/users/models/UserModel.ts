@@ -1,11 +1,16 @@
 import {
+  Association,
+  BelongsToGetAssociationMixin,
   CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize
 } from 'sequelize';
+
+import { CategoriesUserModel } from '../../categories-users/models/CategoriesUserModel';
 
 export class UserModel extends Model<
   InferAttributes<UserModel>,
@@ -15,8 +20,16 @@ export class UserModel extends Model<
   declare name: string;
   declare email: string;
   declare password: string;
+  declare categories_id: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare category?: NonAttribute<CategoriesUserModel>;
+
+  declare getCategory: BelongsToGetAssociationMixin<CategoriesUserModel>;
+
+  declare static associations: {
+    category: Association<UserModel, CategoriesUserModel>;
+  };
 
   public static initialize(sequelize: Sequelize): void {
     UserModel.init(
@@ -39,6 +52,10 @@ export class UserModel extends Model<
           type: DataTypes.STRING,
           allowNull: false
         },
+        categories_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false
+        },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
       },
@@ -47,5 +64,12 @@ export class UserModel extends Model<
         tableName: 'users'
       }
     );
+  }
+
+  public static associate(): void {
+    UserModel.belongsTo(CategoriesUserModel, {
+      foreignKey: 'categories_id',
+      as: 'category'
+    });
   }
 }

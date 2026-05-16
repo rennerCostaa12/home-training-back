@@ -1,6 +1,6 @@
 import { app } from './app';
-import { initializeDatabase } from './config/database';
-import { env } from './config/env';
+import { initializeDatabase } from "../config/database";
+import { env } from '../config/env';
 
 const bootstrap = async (): Promise<void> => {
   await initializeDatabase();
