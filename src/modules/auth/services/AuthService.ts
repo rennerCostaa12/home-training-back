@@ -1,12 +1,14 @@
 import { AppError } from "../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
-import { BcryptHash } from "../../../utils/BcryptHash";
+import { IBcryptHash } from "../../../utils/BcryptHash/types";
+import { IJwtToken } from "../../../utils/JwtToken/types";
 import { IUsersRepository } from "../../users/repositories/IUsersRepository";
 
 export class AuthService {
   constructor(
     private readonly userRepository: IUsersRepository,
-    private readonly bcryptHash: BcryptHash,
+    private readonly bcryptHash: IBcryptHash,
+    private readonly jwtToken: IJwtToken,
   ) {}
 
   public async SignIn(email: string, password: string) {
@@ -31,11 +33,18 @@ export class AuthService {
       );
     }
 
+    const response = await this.jwtToken.generateToken({
+      sub: String(userFinded.id),
+      email: userFinded.email,
+      categories_id: userFinded.categories_id,
+    });
+
     return {
       id: userFinded.id,
       name: userFinded.name,
       categories_id: userFinded.categories_id,
       email: userFinded.email,
+      token: response,
     };
   }
 }
