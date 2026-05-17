@@ -3,9 +3,13 @@ import { UserModel } from "../models/UserModel";
 import { IUsersRepository } from "../repositories/IUsersRepository";
 import { AppError } from "../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
+import { IBcryptHash } from "../../../utils/BcryptHash/types";
 
 export class CreateUserService {
-  constructor(private readonly usersRepository: IUsersRepository) {}
+  constructor(
+    private readonly usersRepository: IUsersRepository,
+    private readonly bcryptHash: IBcryptHash,
+  ) {}
 
   public async execute(data: CreateUserDTO): Promise<UserModel> {
     const userAlreadyExists = await this.usersRepository.findByEmail(
@@ -19,6 +23,11 @@ export class CreateUserService {
       );
     }
 
-    return this.usersRepository.create(data);
+    let payloadUser = data;
+    const passwordEncrypted = await this.bcryptHash.hashPassword(data.password);
+
+    payloadUser.password = passwordEncrypted;
+
+    return this.usersRepository.create(payloadUser);
   }
 }

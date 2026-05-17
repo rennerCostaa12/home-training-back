@@ -4,6 +4,7 @@ import { CreateUserService } from "../services/CreateUserService";
 import { UsersRepository } from "../repositories/UsersRepository";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
 import { successResponse } from "../../../shared/http/responses";
+import { BcryptHash } from "../../../utils/BcryptHash";
 
 export class CreateUserController {
   public async createUser(
@@ -11,7 +12,8 @@ export class CreateUserController {
     response: Response,
   ): Promise<Response> {
     const usersRepository = new UsersRepository();
-    const createUserService = new CreateUserService(usersRepository);
+    const bcryptHash = new BcryptHash();
+    const createUserService = new CreateUserService(usersRepository, bcryptHash);
 
     const user = await createUserService.execute(request.body);
 
