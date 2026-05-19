@@ -43,6 +43,8 @@ export class AuthService {
       id: userFinded.id,
       name: userFinded.name,
       categories_id: userFinded.categories_id,
+      objective_user_id: userFinded.objective_user_id,
+      work_hours_id: userFinded.work_hours_id,
       email: userFinded.email,
       token: response,
     };
